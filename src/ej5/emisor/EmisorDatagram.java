@@ -19,28 +19,34 @@ public class EmisorDatagram {
         DatagramSocket socketApi1 = new DatagramSocket(dirApi1);
 
 
-        System.out.println("Mensaje para el receptor");
+        while (true){
+            System.out.println("Mensaje para el receptor");
 
-        String mensaje = teclado.nextLine();
+            String mensaje = teclado.nextLine();
 
-        InetAddress dirRecep = InetAddress.getByName("localhost");
-        DatagramPacket datagrama = new DatagramPacket(mensaje.getBytes(), mensaje.getBytes().length, dirRecep, 55556);
+            InetAddress dirRecep = InetAddress.getByName("localhost");
+            DatagramPacket datagrama = new DatagramPacket(mensaje.getBytes(), mensaje.getBytes().length, dirRecep, 55556);
 
-        socketApi1.send(datagrama);
+            socketApi1.send(datagrama);
 
-        System.out.println("Mensaje enviado");
+            System.out.println("Mensaje enviado");
 
-        System.out.println("Esperamos respuesta del DatagramSocket 2");
+            System.out.println("Esperamos respuesta del DatagramSocket 2");
 
-        byte [] respuesta = new byte[50];
-        DatagramPacket datagrama_resp = new DatagramPacket(respuesta, respuesta.length);
+            byte [] respuesta = new byte[100];
+            DatagramPacket datagrama_resp = new DatagramPacket(respuesta, respuesta.length);
 
-        socketApi1.receive(datagrama_resp);
+            socketApi1.receive(datagrama_resp);
 
-        System.out.println("Respuesta recibida: " + new String(respuesta));
-        System.out.println("Cerrado el DatagramSocket 1");
+            System.out.println("Respuesta recibida: " + new String(respuesta));
 
-        socketApi1.close();
+            // Verificamos si el mensaje original contenía "close"
+            if (mensaje.contains("close")) {
+                System.out.println("Cerrado el DatagramSocket 1");
+                socketApi1.close();
+                break;
+            }
 
+        }
     }
 }
