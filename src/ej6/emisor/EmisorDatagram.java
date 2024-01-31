@@ -18,29 +18,37 @@ public class EmisorDatagram {
         InetSocketAddress dirApi1 = new InetSocketAddress("localhost", 55555);
         DatagramSocket socketApi1 = new DatagramSocket(dirApi1);
 
+        System.out.println("Para cerrar poner close en el mensaje");
 
-        System.out.println("Mensaje para el receptor");
 
-        String mensaje = teclado.nextLine();
+        while (true){
+            System.out.println("Mensaje para el receptor");
 
-        InetAddress dirRecep = InetAddress.getByName("localhost");
-        DatagramPacket datagrama = new DatagramPacket(mensaje.getBytes(), mensaje.getBytes().length, dirRecep, 55556);
+            String mensaje = teclado.nextLine();
 
-        socketApi1.send(datagrama);
+            InetAddress dirRecep = InetAddress.getByName("localhost");
+            DatagramPacket datagrama = new DatagramPacket(mensaje.getBytes(), mensaje.getBytes().length, dirRecep, 55556);
 
-        System.out.println("Mensaje enviado");
+            socketApi1.send(datagrama);
 
-        System.out.println("Esperamos respuesta del DatagramSocket 2");
+            System.out.println("Mensaje enviado");
 
-        byte [] respuesta = new byte[50];
-        DatagramPacket datagrama_resp = new DatagramPacket(respuesta, respuesta.length);
+            System.out.println("Esperamos respuesta del DatagramSocket 2");
 
-        socketApi1.receive(datagrama_resp);
+            byte [] respuesta = new byte[100];
+            DatagramPacket datagrama_resp = new DatagramPacket(respuesta, respuesta.length);
 
-        System.out.println("Respuesta recibida: " + new String(respuesta));
-        System.out.println("Cerrado el DatagramSocket 1");
+            socketApi1.receive(datagrama_resp);
 
-        socketApi1.close();
+            System.out.println("Respuesta recibida: " + new String(respuesta));
 
+            // Verificamos si el mensaje original contenía "close"
+            if (mensaje.contains("close")) {
+                System.out.println("Cerrado el DatagramSocket 1");
+                socketApi1.close();
+                break;
+            }
+
+        }
     }
 }
