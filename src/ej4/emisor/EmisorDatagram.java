@@ -7,10 +7,13 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 public class EmisorDatagram {
 
     public static void main(String[] args) throws IOException {
+
+        Scanner teclado = new Scanner(System.in);
 
         System.out.println("Creamos el DatagramSocket 1");
 
@@ -20,7 +23,7 @@ public class EmisorDatagram {
 
         System.out.println("Mensaje para el receptor");
 
-        String mensaje = "Mensaje desde el DatagramSocket 1";
+        String mensaje = teclado.nextLine();
 
         InetAddress dirRecep = InetAddress.getByName("localhost");
         DatagramPacket datagrama = new DatagramPacket(mensaje.getBytes(), mensaje.getBytes().length, dirRecep, 55556);
@@ -36,7 +39,7 @@ public class EmisorDatagram {
 
         socketApi1.receive(datagrama_resp);
 
-        System.out.println("Respuesta recibida: "+ new String(respuesta));
+        System.out.println("Respuesta recibida: " + new String(respuesta));
         System.out.println("Cerrado el DatagramSocket 1");
 
         socketApi1.close();
